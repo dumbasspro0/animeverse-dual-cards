@@ -1,5 +1,373 @@
-import {useMemo,useState} from 'react';
-import {Search,Swords,Sparkles,Layers3,Menu,X,ChevronDown,Zap,Github,ArrowUpRight} from 'lucide-react';
-import {characters,animeNames} from './data/characters.js';
-import Card from './components/Card.jsx'; import Modal from './components/Modal.jsx'; import DuelArena from './components/DuelArena.jsx';
-export default function App(){const [query,setQuery]=useState('');const [anime,setAnime]=useState('All Anime');const [sort,setSort]=useState('featured');const [selectedCard,setSelectedCard]=useState(null);const [duelChampion,setDuelChampion]=useState(characters[0]);const [mobileMenu,setMobileMenu]=useState(false);const filtered=useMemo(()=>{let list=characters.filter(c=>(anime==='All Anime'||c.anime===anime)&&`${c.name} ${c.anime} ${c.ability}`.toLowerCase().includes(query.toLowerCase().trim()));if(sort==='power')list=[...list].sort((a,b)=>b.power-a.power);if(sort==='name')list=[...list].sort((a,b)=>a.name.localeCompare(b.name));return list;},[query,anime,sort]);function jumpToDuel(c){setDuelChampion(c);setSelectedCard(null);document.getElementById('duel')?.scrollIntoView({behavior:'smooth'});}return <main><nav className="navbar"><a href="#home" className="brand"><span className="brand-icon"><Swords size={19}/></span><span>ANIME<span className="brand-accent">VERSE</span><small>CARD DUELS</small></span></a><button className="mobile-menu-button" onClick={()=>setMobileMenu(!mobileMenu)} aria-label="Toggle navigation">{mobileMenu?<X/>:<Menu/>}</button><div className={`nav-links ${mobileMenu?'nav-open':''}`}><a href="#collection" onClick={()=>setMobileMenu(false)}>Collection</a><a href="#duel" onClick={()=>setMobileMenu(false)}>Duel Arena</a><a href="#how-to-play" onClick={()=>setMobileMenu(false)}>How to play</a></div><a className="nav-cta" href="#collection">Explore cards <ArrowUpRight size={15}/></a></nav><section className="hero" id="home"><div className="hero-grid"/><div className="hero-content"><div className="hero-kicker"><span className="live-dot"/> THE ULTIMATE ANIME CARD EXPERIENCE</div><h1>YOUR FAVES.<br/>YOUR <span>FIGHT.</span></h1><p className="hero-description">Collect iconic champions. Discover their signature moves. Find out who rules the arena.</p><div className="hero-buttons"><a href="#collection" className="primary-button">Explore collection <ArrowUpRight size={17}/></a><a href="#duel" className="text-button"><Swords size={16}/> Enter the arena</a></div><div className="hero-stats"><div><strong>10</strong><span>STARTER CARDS</span></div><div><strong>10</strong><span>ANIME WORLDS</span></div><div><strong>∞</strong><span>RIVALRIES</span></div></div></div><div className="hero-display"><div className="display-orbit orbit-a"/><div className="display-orbit orbit-b"/><div className="hero-card hero-card-back"><Card character={characters[5]} onClick={setSelectedCard} compact/></div><div className="hero-card hero-card-middle"><Card character={characters[1]} onClick={setSelectedCard} compact/></div><div className="hero-card hero-card-front"><Card character={characters[0]} onClick={setSelectedCard} compact/></div><div className="power-stamp"><Zap size={15} fill="currentColor"/><span>POWER</span><strong>096</strong></div></div><div className="hero-bottom-line"><span>VOL. 001 — THE FIRST WAVE</span><span>BUILT FOR FANS, MADE FOR DUELS <span className="line-arrow">↗</span></span></div></section><section className="collection-section" id="collection"><div className="section-heading"><div><span className="eyebrow">BUILD YOUR ROSTER</span><h2>The <em>Collection</em></h2><p>Ten worlds. Ten champions. Who's making your lineup?</p></div><div className="collection-count"><Layers3 size={18}/><span><strong>{String(filtered.length).padStart(2,'0')}</strong> / 10 CARDS</span></div></div><div className="collection-toolbar"><div className="search-box"><Search size={17}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search character, anime, ability..." aria-label="Search cards"/>{query&&<button onClick={()=>setQuery('')} aria-label="Clear search"><X size={15}/></button>}</div><div className="filter-group"><label htmlFor="anime-filter">WORLD</label><div className="select-wrap"><select id="anime-filter" value={anime} onChange={e=>setAnime(e.target.value)}>{animeNames.map(n=><option key={n}>{n}</option>)}</select><ChevronDown size={15}/></div></div><div className="filter-group sort-filter"><label htmlFor="sort-filter">SORT BY</label><div className="select-wrap"><select id="sort-filter" value={sort} onChange={e=>setSort(e.target.value)}><option value="featured">Featured</option><option value="power">Power: high to low</option><option value="name">Name: A to Z</option></select><ChevronDown size={15}/></div></div></div>{filtered.length?<div className="card-grid">{filtered.map(c=><Card character={c} onClick={setSelectedCard} key={c.id}/>)}</div>:<div className="no-results"><Search size={28}/><h3>No cards found</h3><p>Try a different name or choose another anime world.</p><button className="secondary-button" onClick={()=>{setQuery('');setAnime('All Anime');}}>Clear filters</button></div>}</section><DuelArena characters={characters} selected={duelChampion} onSelect={setDuelChampion}/><section className="how-section" id="how-to-play"><div className="how-title"><span className="eyebrow">NO COMPLICATED RULEBOOK</span><h2>How to <em>play</em></h2><p>Three steps. One winner. All bragging rights.</p></div><div className="how-steps"><article><span className="step-number">01</span><div className="step-icon"><Layers3/></div><h3>Pick your card</h3><p>Browse the collection and choose the champion you want to represent you.</p></article><article><span className="step-number">02</span><div className="step-icon"><Swords/></div><h3>Choose a rival</h3><p>Head to the Duel Arena and select another champion to challenge.</p></article><article><span className="step-number">03</span><div className="step-icon"><Sparkles/></div><h3>Claim the win</h3><p>Compare power stats. The higher-power card wins the round.</p></article></div></section><footer className="footer"><a href="#home" className="brand"><span className="brand-icon"><Swords size={19}/></span><span>ANIME<span className="brand-accent">VERSE</span><small>CARD DUELS</small></span></a><p>A fan-made portfolio project. Not affiliated with any anime publisher.</p><a className="footer-link" href="https://github.com/" target="_blank" rel="noreferrer"><Github size={16}/> GitHub <ArrowUpRight size={14}/></a></footer><Modal character={selectedCard} onClose={()=>setSelectedCard(null)} onDuel={jumpToDuel}/></main>}
+
+import {
+    Search,
+    Swords,
+    Sparkles,
+    Layers3,
+    Menu,
+    X,
+    ChevronDown,
+    Zap,
+    ArrowUpRight,
+  } from "lucide-react";
+  
+  import { useMemo, useState } from "react";
+  import { characters, animeNames } from "./data/characters.js";
+  import Card from "./components/Card.jsx";
+  import Modal from "./components/Modal.jsx";
+  import DuelArena from "./components/DuelArena.jsx";
+  
+  export default function App() {
+    const [query, setQuery] = useState("");
+    const [anime, setAnime] = useState("All Anime");
+    const [sort, setSort] = useState("featured");
+    const [selectedCard, setSelectedCard] = useState(null);
+    const [duelChampion, setDuelChampion] = useState(characters[0]);
+    const [mobileMenu, setMobileMenu] = useState(false);
+  
+    const filtered = useMemo(() => {
+      let list = characters.filter(
+        (c) =>
+          (anime === "All Anime" || c.anime === anime) &&
+          `${c.name} ${c.anime} ${c.ability}`
+            .toLowerCase()
+            .includes(query.toLowerCase().trim())
+      );
+  
+      if (sort === "power") {
+        list = [...list].sort((a, b) => b.power - a.power);
+      }
+  
+      if (sort === "name") {
+        list = [...list].sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+      }
+  
+      return list;
+    }, [query, anime, sort]);
+  
+    function jumpToDuel(character) {
+      setDuelChampion(character);
+      setSelectedCard(null);
+      document
+        .getElementById("duel")
+        ?.scrollIntoView({ behavior: "smooth" });
+    }
+  
+    return (
+      <main>
+        <nav className="navbar">
+          <a href="#home" className="brand">
+            <span className="brand-icon">
+              <Swords size={19} />
+            </span>
+            <span>
+              ANIME<span className="brand-accent">VERSE</span>
+              <small>CARD DUELS</small>
+            </span>
+          </a>
+  
+          <button
+            className="mobile-menu-button"
+            onClick={() => setMobileMenu(!mobileMenu)}
+            aria-label="Toggle navigation"
+          >
+            {mobileMenu ? <X /> : <Menu />}
+          </button>
+  
+          <div className={`nav-links ${mobileMenu ? "nav-open" : ""}`}>
+            <a href="#collection" onClick={() => setMobileMenu(false)}>
+              Collection
+            </a>
+            <a href="#duel" onClick={() => setMobileMenu(false)}>
+              Duel Arena
+            </a>
+            <a href="#how-to-play" onClick={() => setMobileMenu(false)}>
+              How to play
+            </a>
+          </div>
+  
+          <a className="nav-cta" href="#collection">
+            Explore cards <ArrowUpRight size={15} />
+          </a>
+        </nav>
+  
+        <section className="hero" id="home">
+          <div className="hero-grid" />
+  
+          <div className="hero-content">
+            <div className="hero-kicker">
+              <span className="live-dot" />
+              THE ULTIMATE ANIME CARD EXPERIENCE
+            </div>
+  
+            <h1>
+              YOUR FAVES.
+              <br />
+              YOUR <span>FIGHT.</span>
+            </h1>
+  
+            <p className="hero-description">
+              Collect iconic champions. Discover their signature moves.
+              Find out who rules the arena.
+            </p>
+  
+            <div className="hero-buttons">
+              <a href="#collection" className="primary-button">
+                Explore collection <ArrowUpRight size={17} />
+              </a>
+              <a href="#duel" className="text-button">
+                <Swords size={16} /> Enter the arena
+              </a>
+            </div>
+  
+            <div className="hero-stats">
+              <div>
+                <strong>10</strong>
+                <span>STARTER CARDS</span>
+              </div>
+              <div>
+                <strong>10</strong>
+                <span>ANIME WORLDS</span>
+              </div>
+              <div>
+                <strong>∞</strong>
+                <span>RIVALRIES</span>
+              </div>
+            </div>
+          </div>
+  
+          <div className="hero-display">
+            <div className="display-orbit orbit-a" />
+            <div className="display-orbit orbit-b" />
+  
+            <div className="hero-card hero-card-back">
+              <Card
+                character={characters[5]}
+                onClick={setSelectedCard}
+                compact
+              />
+            </div>
+  
+            <div className="hero-card hero-card-middle">
+              <Card
+                character={characters[1]}
+                onClick={setSelectedCard}
+                compact
+              />
+            </div>
+  
+            <div className="hero-card hero-card-front">
+              <Card
+                character={characters[0]}
+                onClick={setSelectedCard}
+                compact
+              />
+            </div>
+  
+            <div className="power-stamp">
+              <Zap size={15} fill="currentColor" />
+              <span>POWER</span>
+              <strong>096</strong>
+            </div>
+          </div>
+  
+          <div className="hero-bottom-line">
+            <span>VOL. 001 — THE FIRST WAVE</span>
+            <span>
+              BUILT FOR FANS, MADE FOR DUELS{" "}
+              <span className="line-arrow">↗</span>
+            </span>
+          </div>
+        </section>
+  
+        <section className="collection-section" id="collection">
+          <div className="section-heading">
+            <div>
+              <span className="eyebrow">BUILD YOUR ROSTER</span>
+              <h2>
+                The <em>Collection</em>
+              </h2>
+              <p>Ten worlds. Ten champions. Who's making your lineup?</p>
+            </div>
+  
+            <div className="collection-count">
+              <Layers3 size={18} />
+              <span>
+                <strong>{String(filtered.length).padStart(2, "0")}</strong>{" "}
+                / 10 CARDS
+              </span>
+            </div>
+          </div>
+  
+          <div className="collection-toolbar">
+            <div className="search-box">
+              <Search size={17} />
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search character, anime, ability..."
+                aria-label="Search cards"
+              />
+              {query && (
+                <button
+                  onClick={() => setQuery("")}
+                  aria-label="Clear search"
+                >
+                  <X size={15} />
+                </button>
+              )}
+            </div>
+  
+            <div className="filter-group">
+              <label htmlFor="anime-filter">WORLD</label>
+              <div className="select-wrap">
+                <select
+                  id="anime-filter"
+                  value={anime}
+                  onChange={(e) => setAnime(e.target.value)}
+                >
+                  {animeNames.map((name) => (
+                    <option key={name}>{name}</option>
+                  ))}
+                </select>
+                <ChevronDown size={15} />
+              </div>
+            </div>
+  
+            <div className="filter-group sort-filter">
+              <label htmlFor="sort-filter">SORT BY</label>
+              <div className="select-wrap">
+                <select
+                  id="sort-filter"
+                  value={sort}
+                  onChange={(e) => setSort(e.target.value)}
+                >
+                  <option value="featured">Featured</option>
+                  <option value="power">Power: high to low</option>
+                  <option value="name">Name: A to Z</option>
+                </select>
+                <ChevronDown size={15} />
+              </div>
+            </div>
+          </div>
+  
+          {filtered.length ? (
+            <div className="card-grid">
+              {filtered.map((character) => (
+                <Card
+                  character={character}
+                  onClick={setSelectedCard}
+                  key={character.id}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="no-results">
+              <Search size={28} />
+              <h3>No cards found</h3>
+              <p>Try a different name or choose another anime world.</p>
+              <button
+                className="secondary-button"
+                onClick={() => {
+                  setQuery("");
+                  setAnime("All Anime");
+                }}
+              >
+                Clear filters
+              </button>
+            </div>
+          )}
+        </section>
+  
+        <DuelArena
+          characters={characters}
+          selected={duelChampion}
+          onSelect={setDuelChampion}
+        />
+  
+        <section className="how-section" id="how-to-play">
+          <div className="how-title">
+            <span className="eyebrow">NO COMPLICATED RULEBOOK</span>
+            <h2>
+              How to <em>play</em>
+            </h2>
+            <p>Three steps. One winner. All bragging rights.</p>
+          </div>
+  
+          <div className="how-steps">
+            <article>
+              <span className="step-number">01</span>
+              <div className="step-icon">
+                <Layers3 />
+              </div>
+              <h3>Pick your card</h3>
+              <p>
+                Browse the collection and choose the champion you want
+                to represent you.
+              </p>
+            </article>
+  
+            <article>
+              <span className="step-number">02</span>
+              <div className="step-icon">
+                <Swords />
+              </div>
+              <h3>Choose a rival</h3>
+              <p>
+                Head to the Duel Arena and select another champion to
+                challenge.
+              </p>
+            </article>
+  
+            <article>
+              <span className="step-number">03</span>
+              <div className="step-icon">
+                <Sparkles />
+              </div>
+              <h3>Claim the win</h3>
+              <p>
+                Compare power stats. The higher-power card wins the round.
+              </p>
+            </article>
+          </div>
+        </section>
+  
+        <footer className="footer">
+          <a href="#home" className="brand">
+            <span className="brand-icon">
+              <Swords size={19} />
+            </span>
+            <span>
+              ANIME<span className="brand-accent">VERSE</span>
+              <small>CARD DUELS</small>
+            </span>
+          </a>
+  
+          <p>
+            A fan-made portfolio project. Not affiliated with any anime
+            publisher.
+          </p>
+  
+          <a
+            className="footer-link"
+            href="https://github.com/dumbasspro0/animeverse-dual-cards"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <ArrowUpRight size={16} />
+            GitHub
+            <ArrowUpRight size={14} />
+          </a>
+        </footer>
+  
+        <Modal
+          character={selectedCard}
+          onClose={() => setSelectedCard(null)}
+          onDuel={jumpToDuel}
+        />
+      </main>
+    );
+  }
+  
