@@ -1,0 +1,13 @@
+export const characters = [
+{id:1,name:'Monkey D. Luffy',anime:'One Piece',epithet:'The Future Pirate King',power:96,life:8,rarity:'Legendary',element:'Flame',symbol:'麦',ability:'Gum-Gum: Red Hawk',description:'A fearless captain whose will burns brighter with every battle.',art:'luffy'},
+{id:2,name:'Naruto Uzumaki',anime:'Naruto',epithet:'The Unpredictable Ninja',power:92,life:7,rarity:'Legendary',element:'Wind',symbol:'忍',ability:'Rasengan',description:'Never backs down. His determination can turn any fight around.',art:'naruto'},
+{id:3,name:'Ichigo Kurosaki',anime:'Bleach',epithet:'Substitute Soul Reaper',power:94,life:7,rarity:'Epic',element:'Spirit',symbol:'斬',ability:'Getsuga Tensho',description:'A powerful swordsman standing between the living and the lost.',art:'ichigo'},
+{id:4,name:'Son Goku',anime:'Dragon Ball',epithet:"Earth's Greatest Defender",power:99,life:9,rarity:'Mythic',element:'Ki',symbol:'悟',ability:'Kamehameha',description:'A warrior who keeps reaching new heights beyond every limit.',art:'goku'},
+{id:5,name:'Mikasa Ackerman',anime:'Attack on Titan',epithet:"Humanity's Strongest Soldier",power:88,life:6,rarity:'Epic',element:'Steel',symbol:'自由',ability:'Crimson Pursuit',description:'Precise, relentless, and fiercely loyal to the people she loves.',art:'mikasa'},
+{id:6,name:'Satoru Gojo',anime:'Jujutsu Kaisen',epithet:'The Honored One',power:98,life:8,rarity:'Mythic',element:'Void',symbol:'無',ability:'Hollow Purple',description:'The strongest sorcerer bends the battlefield to his own rules.',art:'gojo'},
+{id:7,name:'Tanjiro Kamado',anime:'Demon Slayer',epithet:'Kindness With a Blade',power:87,life:6,rarity:'Rare',element:'Water',symbol:'水',ability:'Water Breathing',description:'A compassionate swordsman with a resolve as sharp as his blade.',art:'tanjiro'},
+{id:8,name:'Izuku Midoriya',anime:'My Hero Academia',epithet:'The Next Symbol of Peace',power:86,life:6,rarity:'Rare',element:'Impact',symbol:'力',ability:'One For All: Smash',description:'A hero in progress who turns courage into incredible strength.',art:'deku'},
+{id:9,name:'Killua Zoldyck',anime:'Hunter x Hunter',epithet:'Lightning in Motion',power:89,life:6,rarity:'Epic',element:'Lightning',symbol:'雷',ability:'Godspeed',description:'A quick-thinking fighter whose lightning-fast instincts are deadly.',art:'killua'},
+{id:10,name:'Sung Jinwoo',anime:'Solo Leveling',epithet:'The Shadow Monarch',power:97,life:8,rarity:'Mythic',element:'Shadow',symbol:'影',ability:'Arise',description:'A once-weak hunter who commands an army from the shadows.',art:'jinwoo'}
+];
+export const animeNames=['All Anime',...new Set(characters.map(c=>c.anime))];
